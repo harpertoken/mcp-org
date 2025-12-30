@@ -6,6 +6,16 @@
 - Swift 6.2+ (verify with: `swift --version`)
 - GitHub App with repository read permissions
 
+## Verification
+
+After building, verify the binary's minimum macOS version:
+
+```bash
+otool -l .build/arm64-apple-macosx/debug/MCPGitHubOrgMapper | grep -A 2 LC_BUILD_VERSION
+```
+
+Should show `minos 12.0` confirming macOS 12.0 minimum.
+
 ## GitHub App Setup
 
 1. Install the [harpertoken-mcp GitHub App](https://github.com/apps/harpertoken-mcp) in your organization
