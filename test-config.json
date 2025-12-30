@@ -1,0 +1,13 @@
+{
+  "org": {
+    "name": "harpertoken",
+    "installationID": "101869535",
+    "appID": "2564182",
+    "defaultVisibility": "public"
+  },
+  "repos": {
+    "include": ["*"],
+    "exclude": [],
+    "overrides": {}
+  }
+}

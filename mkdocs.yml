@@ -1,0 +1,37 @@
+---
+site_name: MCP GitHub Org Mapper
+site_description: Secure MCP server for GitHub organization mapping
+site_author: KERNEL.METAL (harpertoken)
+site_url: https://harpertoken.github.io/mcp-org/
+
+repo_url: https://github.com/harpertoken/mcp-org
+repo_name: harpertoken/mcp-org
+
+theme:
+  name: material
+  palette:
+    primary: blue
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - codehilite
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+nav:
+  - Home: index.md
+  - Setup: setup.md
+  - Usage: usage.md
+  - Contributing: contributing.md
