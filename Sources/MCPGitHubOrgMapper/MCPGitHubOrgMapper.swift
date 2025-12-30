@@ -4,17 +4,27 @@
 
 import Foundation
 
+func loadConfigFromEnv() -> OrgConfig {
+    let orgName = ProcessInfo.processInfo.environment["ORG_NAME"] ?? "default-org"
+    let appID = ProcessInfo.processInfo.environment["APP_ID"] ?? "0"
+    let installationID = ProcessInfo.processInfo.environment["INSTALLATION_ID"] ?? "0"
+    let defaultVisibility = ProcessInfo.processInfo.environment["DEFAULT_VISIBILITY"] ?? "public"
+    let include = ProcessInfo.processInfo.environment["REPO_INCLUDE"]?.split(separator: ",").map(String.init) ?? ["*"]
+    let exclude = ProcessInfo.processInfo.environment["REPO_EXCLUDE"]?.split(separator: ",").map(String.init) ?? []
+    let org = Org(name: orgName, installationID: installationID, appID: appID, defaultVisibility: defaultVisibility)
+    let repos = RepoScope(include: include, exclude: exclude, overrides: [:])
+    return OrgConfig(org: org, repos: repos)
+}
+
 @main
 struct MCPGitHubOrgMapper {
     static func main() async {
         loadEnv()
         let args = CommandLine.arguments
+        let config = loadConfigFromEnv()
         if args.count > 1 && args[1] == "server" {
             // Run as MCP server
             do {
-                let url = URL(fileURLWithPath: "test-config.json")
-                let data = try Data(contentsOf: url)
-                let config: OrgConfig = try JSONDecoder().decode(OrgConfig.self, from: data)
                 let server = MCPServer(config: config)
                 await server.run()
             } catch {
@@ -24,9 +34,6 @@ struct MCPGitHubOrgMapper {
             // Test mode
             print("Testing MCP GitHub Org Mapper...")
             do {
-                let url = URL(fileURLWithPath: "test-config.json")
-                let data = try Data(contentsOf: url)
-                let config: OrgConfig = try JSONDecoder().decode(OrgConfig.self, from: data)
                 print("Config loaded: Org \(config.org.name)")
 
                 // Fetch public repos from GitHub

@@ -1,0 +1,13 @@
+{
+  "org": {
+    "name": "your-org-name",
+    "installationID": "your-installation-id",
+    "appID": "your-app-id",
+    "defaultVisibility": "public"
+  },
+  "repos": {
+    "include": ["*"],
+    "exclude": [],
+    "overrides": {}
+  }
+}
