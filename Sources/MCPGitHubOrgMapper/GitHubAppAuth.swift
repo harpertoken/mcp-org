@@ -7,11 +7,6 @@ public struct GitHubAppAuth {
     let appID: String
     let privateKeyPEM: String
 
-    init(appID: String, privateKeyPEM: String) {
-        self.appID = appID
-        self.privateKeyPEM = privateKeyPEM
-    }
-
     func generateJWT() throws -> String {
         let header: [String: String] = ["alg": "RS256", "typ": "JWT"]
         let now = Int(Date().timeIntervalSince1970)
@@ -54,7 +49,12 @@ public struct GitHubAppAuth {
         let digest = SHA256.hash(data: message.data(using: .utf8)!)
         let digestData = Data(digest)
 
-        guard let signature = SecKeyCreateSignature(privateKey, .rsaSignatureDigestPKCS1v15SHA256, digestData as CFData, &error) else {
+        guard let signature = SecKeyCreateSignature(
+            privateKey,
+            .rsaSignatureDigestPKCS1v15SHA256,
+            digestData as CFData,
+            &error
+        ) else {
             throw error!.takeRetainedValue() as Error
         }
 
@@ -81,14 +81,23 @@ public struct GitHubAppAuth {
         }
 
         guard let publicKey = SecKeyCopyPublicKey(privateKey) else {
-            throw NSError(domain: "Security", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to derive public key"])
+            throw NSError(
+                domain: "Security",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Failed to derive public key"]
+            )
         }
 
         let privData = SecKeyCopyExternalRepresentation(privateKey, nil)! as Data
         let pubData = SecKeyCopyExternalRepresentation(publicKey, nil)! as Data
 
-        let privPEM = "-----BEGIN RSA PRIVATE KEY-----\n" + privData.base64EncodedString(options: .lineLength64Characters) + "\n-----END RSA PRIVATE KEY-----"
-        let pubPEM = "-----BEGIN RSA PUBLIC KEY-----\n" + pubData.base64EncodedString(options: .lineLength64Characters) + "\n-----END RSA PUBLIC KEY-----"
+        let privHeader = "-----BEGIN RSA PRIVATE KEY-----\n"
+        let privFooter = "\n-----END RSA PRIVATE KEY-----"
+        let privPEM = privHeader + privData.base64EncodedString(options: .lineLength64Characters) + privFooter
+
+        let pubHeader = "-----BEGIN RSA PUBLIC KEY-----\n"
+        let pubFooter = "\n-----END RSA PUBLIC KEY-----"
+        let pubPEM = pubHeader + pubData.base64EncodedString(options: .lineLength64Characters) + pubFooter
 
         return (privPEM, pubPEM)
     }

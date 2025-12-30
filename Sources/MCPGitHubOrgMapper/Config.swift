@@ -39,17 +39,13 @@ struct ToolPermissions: Codable {
 extension RepoScope {
     func isAllowed(_ repoName: String) -> Bool {
         // First, check exclude (negation patterns)
-        for pattern in exclude {
-            if matches(pattern, repoName) {
-                return false
-            }
+        if exclude.contains(where: { matches($0, repoName) }) {
+            return false
         }
 
         // Then, check include
-        for pattern in include {
-            if matches(pattern, repoName) {
-                return true
-            }
+        if include.contains(where: { matches($0, repoName) }) {
+            return true
         }
 
         // If no include matches, deny
@@ -70,9 +66,13 @@ extension RepoScope {
             .replacingOccurrences(of: ".", with: "\\.")
             .replacingOccurrences(of: "*", with: ".*")
             .replacingOccurrences(of: "?", with: ".")
-        let regex = try! NSRegularExpression(pattern: "^\(regexPattern)$", options: [])
-        let range = NSRange(location: 0, length: name.utf16.count)
-        return regex.firstMatch(in: name, options: [], range: range) != nil
+        do {
+            let regex = try NSRegularExpression(pattern: "^\(regexPattern)$", options: [])
+            let range = NSRange(location: 0, length: name.utf16.count)
+            return regex.firstMatch(in: name, options: [], range: range) != nil
+        } catch {
+            return false
+        }
     }
 }
 

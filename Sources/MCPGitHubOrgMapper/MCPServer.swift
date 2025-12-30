@@ -26,12 +26,17 @@ public final class MCPServer {
                 encoder.outputFormatting = .prettyPrinted
                 let responseData = try encoder.encode(response)
                 stdout.write(responseData)
-                stdout.write("\n".data(using: .utf8)!)
+                stdout.write(Data("\n".utf8))
             } catch {
-                let errorResponse = MCPResponse(jsonrpc: "2.0", id: nil, result: nil, error: MCPError(code: -32603, message: "Internal error: \(error.localizedDescription)"))
+                let errorResponse = MCPResponse(
+                    jsonrpc: "2.0",
+                    id: nil,
+                    result: nil,
+                    error: MCPError(code: -32603, message: "Internal error: \(error.localizedDescription)")
+                )
                 if let data = try? JSONEncoder().encode(errorResponse) {
                     stdout.write(data)
-                    stdout.write("\n".data(using: .utf8)!)
+                    stdout.write(Data("\n".utf8))
                 }
             }
         }
@@ -50,7 +55,8 @@ public final class MCPServer {
                     ] as [String: Any])
                 ]
             ]
-            return MCPResponse(jsonrpc: "2.0", id: request.id, result: ["tools": AnyCodable(tools.map { AnyCodable($0) })], error: nil)
+            let result = ["tools": AnyCodable(tools.map { AnyCodable($0) })]
+            return MCPResponse(jsonrpc: "2.0", id: request.id, result: result, error: nil)
 
         case "tools/call":
             guard let params = request.params,

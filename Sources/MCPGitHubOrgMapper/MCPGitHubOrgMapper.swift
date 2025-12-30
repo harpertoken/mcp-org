@@ -42,12 +42,7 @@ struct MCPGitHubOrgMapper {
                 print("Fetched \(repos.count) public repos from \(config.org.name)")
 
                 // Test repo authorization
-                var allowedRepos: [String] = []
-                for repo in repos {
-                    if config.repos.isAllowed(repo) {
-                        allowedRepos.append(repo)
-                    }
-                }
+                let allowedRepos = repos.filter { config.repos.isAllowed($0) }
                 print("Authorized repos (\(allowedRepos.count)): \(allowedRepos.prefix(10).joined(separator: ", "))")
 
                 // Test JWT generation with config key
