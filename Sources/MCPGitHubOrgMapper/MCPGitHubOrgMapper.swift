@@ -24,12 +24,8 @@ struct MCPGitHubOrgMapper {
         let config = loadConfigFromEnv()
         if args.count > 1 && args[1] == "server" {
             // Run as MCP server
-            do {
-                let server = MCPServer(config: config)
-                await server.run()
-            } catch {
-                print("Failed to start server: \(error)")
-            }
+            let server = MCPServer(config: config)
+            await server.run()
         } else {
             // Test mode
             print("Testing MCP GitHub Org Mapper...")
