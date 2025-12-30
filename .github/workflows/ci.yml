@@ -1,0 +1,30 @@
+---
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Swift
+        uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: '6.2'
+      - name: Create .env
+        run: |
+          cat > .env << EOF
+          GITHUB_APP_ID=${{ secrets.GITHUB_APP_ID }}
+          GITHUB_PRIVATE_KEY=${{ secrets.GITHUB_PRIVATE_KEY }}
+          GITHUB_INSTALLATION_ID=${{ secrets.GITHUB_INSTALLATION_ID }}
+          EOF
+      - name: Build
+        run: swift build
+      - name: Run tests
+        run: swift test
