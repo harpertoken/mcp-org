@@ -8,10 +8,22 @@
 
 ## Verification
 
-After building, verify the binary's minimum macOS version:
+After building, confirm the binary was created:
 
 ```bash
-otool -l .build/arm64-apple-macosx/debug/MCPGitHubOrgMapper | grep -A 2 LC_BUILD_VERSION
+ls -la .build/arm64-apple-macosx/debug/MCPGitHubOrgMapper
+```
+
+Inspect the binary's load commands:
+
+```bash
+otool -l .build/arm64-apple-macosx/debug/MCPGitHubOrgMapper
+```
+
+To verify the minimum macOS version specifically:
+
+```bash
+otool -l .build/arm64-apple-macosx/debug/MCPGitHubOrgMapper | grep -A 5 LC_BUILD_VERSION
 ```
 
 Should show `minos 12.0` confirming macOS 12.0 minimum.
