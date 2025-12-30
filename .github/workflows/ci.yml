@@ -20,9 +20,9 @@ jobs:
       - name: Create .env
         run: |
           cat > .env << EOF
-          GITHUB_APP_ID=${{ secrets.GITHUB_APP_ID }}
-          GITHUB_PRIVATE_KEY=${{ secrets.GITHUB_PRIVATE_KEY }}
-          GITHUB_INSTALLATION_ID=${{ secrets.GITHUB_INSTALLATION_ID }}
+          GITHUB_APP_ID=${{ secrets.APP_ID }}
+          GITHUB_PRIVATE_KEY=${{ secrets.PRIVATE_KEY }}
+          GITHUB_INSTALLATION_ID=${{ secrets.INSTALLATION_ID }}
           EOF
       - name: Build
         run: swift build
