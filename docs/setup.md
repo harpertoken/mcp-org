@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- macOS 12+
-- Swift 6.2+
+- macOS 12+ (verify with: `sw_vers -productVersion`)
+- Swift 6.2+ (verify with: `swift --version`)
 - GitHub App with repository read permissions
 
 ## GitHub App Setup
