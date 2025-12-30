@@ -1,0 +1,41 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        id: release
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config-file: .github/release-please-config.json
+          manifest-file: .github/release-please-manifest.json
+
+  update-version:
+    needs: release
+    if: needs.release.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update VERSION file
+        run: |
+          echo "${{ needs.release.outputs.tag_name }}" | sed 's/^v//' > VERSION
+      - uses: EndBug/add-and-commit@v9
+        with:
+          add: VERSION
+          message: "chore: update VERSION to ${{ needs.release.outputs.tag_name }}"
+          committer_name: GitHub Actions Bot
+          committer_email: 41898282+github-actions[bot]@users.noreply.github.com
