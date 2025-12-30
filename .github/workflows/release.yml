@@ -20,7 +20,7 @@ jobs:
       - uses: google-github-actions/release-please-action@v4
         id: release
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.HARPER_RELEASE_BOT_TOKEN }}
           config-file: .github/release-please-config.json
           manifest-file: .github/release-please-manifest.json
 
@@ -37,5 +37,5 @@ jobs:
         with:
           add: VERSION
           message: "chore: update VERSION to ${{ needs.release.outputs.tag_name }}"
-          committer_name: GitHub Actions Bot
-          committer_email: 41898282+github-actions[bot]@users.noreply.github.com
+          committer_name: harpertoken/rag
+          committer_email: 237646224+harper-release-bot@users.noreply.github.com
