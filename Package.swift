@@ -13,6 +13,6 @@ let package = Package(
         .testTarget(
             name: "MCPGitHubOrgMapperTests",
             dependencies: ["MCPGitHubOrgMapper"]
-        ),
+        )
     ]
 )
